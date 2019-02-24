@@ -22,16 +22,17 @@ Automate creation of ElasticSearch snapshots in an S3 repository.
 | DEBUG                    | Whether to produce debug messages in the log                  | False                                                |
 | ES_HOST                  | Full URL for the ElasticSearch instance                       | http://elasticsearch:9200                            |
 | REPOSITORY_NAME          | Name of the repository to use and create if not present       | s3                                                   |
-| REMOVE_OLDER_THAN_DAYS   | Number of days of snapshots to keep (0 to ignore)             | 0                                                    |
+| REMOVE_OLDER_THAN_DAYS   | Number of days of snapshots to keep (0 to disable)            | 0                                                    |
 | SLACK_WEBHOOK_URL        | Webhook URL                                                   | http://slack/webhook/url                             |
 | ENABLE_SLACK             | Whether to use the SLACK_WEBHOOK_URL to emit message          | False                                                |
 | REPOSITORY_SETTINGS      | JSON blob for `repository-s3` settings                        | {"type": "s3", "settings": {"bucket":"bucket-name"}} |
 | INDEX_NAMES              | List of comma-separated index names to snapshot (empty = all) |                                                      |
 | IGNORE_UNAVAILABLE       | `ignore_unavailable` parameter for snapshot                   | False                                                |
+| SNAPSHOT_PREFIX          | Snapshots will be named with this prefix                      |                                                      |
 | INCLUDE_GLOBAL_STATE     | `include_global_state` parameter for snapshot                 | True                                                 |
 | REQUEST_TIMEOUT_SECONDS  | Timeout value for general ES requests                         | 30                                                   |
 | SNAPSHOT_TIMEOUT_SECONDS | Timeout value for ES snapshot requests (0 to disable)         | 60                                                   |
-| SLACK_MESSAGE_PREFIX     | Slack messages will receive this prefix                       | shutterbug:                                          |
+| SLACK_MESSAGE_PREFIX     | Slack messages will receive this prefix                       | "shutterbug: "                                       |
 
 ## REPOSITORY_SETTINGS
 
