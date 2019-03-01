@@ -89,10 +89,13 @@ def create_snapshot():
 
     wait_for_completion = (settings.SNAPSHOT_TIMEOUT_SECONDS != 0)
 
+    timeout = settings.SNAPSHOT_TIMEOUT_SECONDS
+
     if wait_for_completion:
         logger.info(f"shutterbug will wait {settings.SNAPSHOT_TIMEOUT_SECONDS} second(s) maximum")
     else:
         logger.info(f"shutterbug will not wait for snapshot to be complete")
+        timeout = settings.REQUEST_TIMEOUT_SECONDS
 
     json = {
         "ignore_unavailable": settings.IGNORE_UNAVAILABLE,
@@ -109,12 +112,12 @@ def create_snapshot():
     try:
         url = f"{settings.ES_HOST}/_snapshot/{settings.REPOSITORY_NAME}/{snapshot_name}?wait_for_completion={str(wait_for_completion).lower()}"
 
-        logger.debug(f"request: url={url} data={json} timeout={settings.SNAPSHOT_TIMEOUT_SECONDS}")
+        logger.debug(f"request: url={url} data={json} timeout={timeout}")
 
         r = requests.put(
             url=url,
             json=json,
-            timeout=settings.SNAPSHOT_TIMEOUT_SECONDS
+            timeout=timeout
         )
     except Exception as e:
         logger.fatal(f"problem while creating snapshot {snapshot_name} on {settings.ES_HOST}: {str(e)}")
