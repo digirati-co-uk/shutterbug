@@ -24,11 +24,11 @@ def main():
             if not create_repository():
                 raise Exception("couldn't create repository")
 
-        if not create_snapshot():
-            raise Exception("couldn't create snapshot")
-
         if settings.REMOVE_OLDER_THAN_DAYS > 0:
             remove_old_snapshots()
+
+        if not create_snapshot():
+            raise Exception("couldn't create snapshot")
 
     except Exception as e:
         logger.fatal(str(e))
