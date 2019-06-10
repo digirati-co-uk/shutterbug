@@ -17,7 +17,7 @@ import settings
 
 
 def main():
-    logger.info("starting...")
+    announce("starting...")
 
     try:
         if not repository_exists():
@@ -188,7 +188,7 @@ def remove_old_snapshots():
         if settings.REMOVE_OLDER_THAN_DAYS > 0 and delta.days > settings.REMOVE_OLDER_THAN_DAYS:
             logger.info(f"snapshot {snapshot_name} is a candidate for removal")
             if remove_snapshot(snapshot_name):
-                logger.info(f"snapshot {snapshot_name} has been removed")
+                announce(f"snapshot {snapshot_name} has been removed")
             else:
                 raise Exception(f"snapshot removal failed")
 
