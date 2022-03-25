@@ -15,3 +15,4 @@ INCLUDE_GLOBAL_STATE = bool(distutils.util.strtobool(os.getenv("INCLUDE_GLOBAL_S
 REQUEST_TIMEOUT_SECONDS = int(os.getenv("REQUEST_TIMEOUT_SECONDS", default="30"))
 SNAPSHOT_TIMEOUT_SECONDS = int(os.getenv("SNAPSHOT_TIMEOUT_SECONDS", default="60"))
 SLACK_MESSAGE_PREFIX = os.getenv("SLACK_MESSAGE_PREFIX", default="shutterbug: ")
+ANNOUNCE_SUCCESS = bool(distutils.util.strtobool(os.getenv("ANNOUNCE_SUCCESS", default="True")))

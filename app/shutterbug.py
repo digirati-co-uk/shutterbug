@@ -17,7 +17,7 @@ import settings
 
 
 def main():
-    announce("starting...")
+    announce("starting...", False)
 
     try:
         if not repository_exists():
@@ -33,7 +33,7 @@ def main():
     except Exception as e:
         logger.fatal(str(e))
         if settings.ENABLE_SLACK:
-            slack_announce(message=str(e))
+            slack_announce(message=str(e), is_error=True)
 
 
 def repository_exists():
@@ -75,9 +75,9 @@ def create_repository():
     logger.debug(f"response: {r} {r.text}")
 
     if r.status_code == 200:
-        announce(f"repository {settings.REPOSITORY_NAME} created")
+        announce(f"repository {settings.REPOSITORY_NAME} created", False)
     else:
-        announce(f"repository {settings.REPOSITORY_NAME} not created! reason: {r} {r.text}")
+        announce(f"repository {settings.REPOSITORY_NAME} not created! reason: {r} {r.text}", True)
 
     return r.status_code == 200
 
@@ -127,25 +127,26 @@ def create_snapshot():
 
     if r.status_code == 200:
         if wait_for_completion:
-            announce(f"snapshot {snapshot_name} created")
+            announce(f"snapshot {snapshot_name} created", False)
         else:
-            announce(f"snapshot {snapshot_name} accepted")
+            announce(f"snapshot {snapshot_name} accepted", False)
     else:
-        announce(f"snapshot {snapshot_name} not created! reason: {r} {r.text}")
+        announce(f"snapshot {snapshot_name} not created! reason: {r} {r.text}", True)
 
     return r.status_code == 200
 
 
-def announce(message):
+def announce(message, is_error):
     logger.info(message)
     if settings.ENABLE_SLACK:
-        slack_announce(message)
+        slack_announce(message, is_error)
 
 
-def slack_announce(message):
-    posted_message = f"{settings.SLACK_MESSAGE_PREFIX}{message}"
-    logger.debug(f"slack_announce({settings.SLACK_WEBHOOK_URL}, {posted_message}")
-    _ = requests.post(settings.SLACK_WEBHOOK_URL, json={"text": posted_message, "link_names": 1})
+def slack_announce(message, is_error):
+    if is_error or settings.ANNOUNCE_SUCCESS:
+        posted_message = f"{settings.SLACK_MESSAGE_PREFIX}{message}"
+        logger.debug(f"slack_announce({settings.SLACK_WEBHOOK_URL}, {posted_message}")
+        _ = requests.post(settings.SLACK_WEBHOOK_URL, json={"text": posted_message, "link_names": 1})
 
 
 def remove_old_snapshots():
@@ -188,7 +189,7 @@ def remove_old_snapshots():
         if settings.REMOVE_OLDER_THAN_DAYS > 0 and delta.days > settings.REMOVE_OLDER_THAN_DAYS:
             logger.info(f"snapshot {snapshot_name} is a candidate for removal")
             if remove_snapshot(snapshot_name):
-                announce(f"snapshot {snapshot_name} has been removed")
+                announce(f"snapshot {snapshot_name} has been removed", False)
             else:
                 raise Exception(f"snapshot removal failed")
 
