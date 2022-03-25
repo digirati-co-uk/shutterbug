@@ -33,6 +33,7 @@ Automate creation of ElasticSearch snapshots in an S3 repository.
 | REQUEST_TIMEOUT_SECONDS  | Timeout value for general ES requests                         | 30                                                   |
 | SNAPSHOT_TIMEOUT_SECONDS | Timeout value for ES snapshot requests (0 to disable)         | 60                                                   |
 | SLACK_MESSAGE_PREFIX     | Slack messages will receive this prefix                       | "shutterbug: "                                       |
+| ANNOUNCE_SUCCESS         | If `False`, only failure/error messages announced to Slack    | True                                                 |
 
 ## REPOSITORY_SETTINGS
 
